@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="SmartTable" default="production" basedir=".">
+
+    <description>SmartTable build file</description>
+
+    <target name="-load.properties"
+            description="Set properties for this build">
+        <!--build dir-->
+        <property name="build.dir" value="${basedir}/build"/>
+        <!--Source JS dir-->
+        <property name="src.js.dir" value="${basedir}/src/js"/>
+        <!--Source CSS dir-->
+        <property name="src.css.dir" value="${basedir}/src/css"/>
+        <!--YUI Compressor location-->
+        <property name="yui.dir" value="${build.dir}/lib/yuicompressor-2.4.7.jar"/>
+        <!--Source Lint/Hint dir-->
+        <property name="jslint.js" value="${build.dir}/lib/jslint.js"/>
+        <!--jslint4java-->
+        <taskdef name="jslint" classname="com.googlecode.jslint4java.ant.JSLintTask" classpath="${build.dir}/lib/jslint4java-2.0.2.jar" />
+        <!--Output dir-->
+        <property name="dist.dir" value="dist"/>
+        <!--Build version information -->
+        <property name="build.major" value="2"/>
+        <property name="build.minor" value="2"/>
+        <tstamp>
+            <format property="build.timestamp" pattern="yyyyMMddHHmm" />
+            <format property="TODAY" pattern="EEE, d MMM yyyy HH:mm:ss Z"/>
+        </tstamp>
+    </target>
+
+    <!--Create build directories-->
+    <target name="-init" depends="-load.properties"
+            description="Create build directory structure">
+        
+        <!--Empty build dicectories-->
+        <delete>
+            <fileset dir="${dist.dir}/js"/>
+            <fileset dir="${dist.dir}/css"/>
+        </delete>
+        
+    </target>
+
+    <!--JS Lint-->
+    <target depends="-init" name="-js.lint">
+        <echo>Running JSLint</echo>
+        <jslint jslint="${jslint.js}" options="browser,white,nomen,regexp,bitwise,vars">
+            <formatter type="plain" />
+            <predef>SmartTable</predef>
+            <fileset dir="${src.js.dir}" includes="*.js" excludes="*.nolint.js" />
+        </jslint>
+        <echo>Finished</echo>
+    </target>
+
+
+    <!--Concatenate JS files-->
+    <target name="-js.concatenate" depends="" description="Concatenates specified JavaScript files">
+        <echo>Concatenating JavaScript files</echo>
+        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js">/*${line.separator}${line.separator}</echo>
+        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
+        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
+        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js" append="true">*/${line.separator}${line.separator}</echo>
+        <concat destfile="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js" append="true">
+            <fileset 
+                dir="${src.js.dir}"
+                includes="*.js"/>
+        </concat>
+        <echo>Finished</echo>
+    </target>
+    
+    <!--Concatenate CSS files-->
+    <target name="-css.concatenate" depends="" description="Concatenates specified CSS files">
+        <echo>Concatenating CSS files</echo>
+        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css">/*${line.separator}${line.separator}</echo>
+        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
+        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
+        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css" append="true">*/${line.separator}${line.separator}</echo>
+        <concat destfile="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css" append="true">
+            <fileset 
+                dir="${src.css.dir}"
+                includes="*.css"/>
+        </concat>
+        <echo>Finished</echo>
+    </target>
+
+
+    <!--Minify JS files-->
+    <target name="-js.minify" depends="-js.concatenate" description="Minifies JavaScript files">
+        <echo>Running YUI Compressor on .src.js files</echo>
+        <apply executable="java" parallel="false" dest="${dist.dir}/js" append="true">
+            <fileset dir="${dist.dir}/js" includes="*.src.js"/>
+            <arg line="-jar"/>
+            <arg path="${yui.dir}"/>
+            <srcfile/>
+            <arg line="-o"/>
+            <mapper type="regexp" from="^(.*)\.src\.js$" to="\1.min.js" />
+            <targetfile/>
+        </apply>
+        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js">/*${line.separator}${line.separator}</echo>
+        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
+        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
+        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">*/${line.separator}${line.separator}</echo>
+        <concat destfile="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">
+            <fileset
+                dir="${dist.dir}/js"
+                includes="SmartTable-${build.major}.${build.minor}.min.js"/>
+        </concat>
+        <delete
+            file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.min.js"/>
+        <echo>Finished</echo>
+    </target>
+
+    <!--Minify CSS files-->
+    <target name="-css.minify" depends="-css.concatenate" description="Minifies CSS files">
+        <echo>Running YUI Compressor on .src.css files</echo>
+        <apply executable="java" parallel="false"  dest="${dist.dir}/css">
+            <fileset 
+                dir="${dist.dir}/css" 
+                includes="*.src.css"/>
+            <arg line="-jar"/>
+            <arg path="${yui.dir}"/>
+            <arg line="--line-break 0"/>
+            <srcfile/>
+            <arg line="-o"/>
+            <mapper type="glob" from="*.css" to="*.min.css"/>
+            <targetfile/>
+        </apply>
+        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css">/*${line.separator}${line.separator}</echo>
+        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
+        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
+        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">*/${line.separator}${line.separator}</echo>
+        <concat destfile="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">
+            <fileset
+                dir="${dist.dir}/css"
+                includes="SmartTable-${build.major}.${build.minor}.src.min.css"/>
+        </concat>
+        <delete
+            file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.min.css"/>
+        <echo>Finished</echo>
+    </target>
+
+    <!-- Build ============================================ -->
+
+    <target name="production" 
+            description="Builds project files for production use"
+            depends="
+            -load.properties, 
+            -init,
+            -js.concatenate,
+            -css.concatenate,
+            -js.minify,
+            -css.minify,
+            -js.lint">
+    </target>
+    <target name="dev with lint" 
+            description="Builds project files for development with lint"
+            depends="
+            -load.properties, 
+            -init,
+            -js.concatenate,
+            -css.concatenate,
+            -js.lint">
+    </target>
+    <target name="dev without lint" 
+            description="Builds project files for development without lint"
+            depends="
+            -load.properties, 
+            -init,
+            -js.concatenate,
+            -css.concatenate">
+    </target>
+</project>
