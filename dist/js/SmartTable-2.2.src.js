@@ -1,7 +1,7 @@
 /*
 
     SmartTable version 2.2
-    Build Date: Tue, 15 Apr 2014 20:04:03 -0700
+    Build Date: Tue, 15 Apr 2014 21:51:14 -0700
 
 */
 
@@ -14,11 +14,10 @@
 
 (function() {
     'use strict';
-    // setup SmartTable
     if (!window.SmartTable) {
         window.SmartTable = {};
     }
-
+    
     // get the size/count of an object (much like length for an array)
     function objSize(myobj) {
         var element_count = 0, key;
@@ -32,33 +31,28 @@
     
     // this can verify if things are the same (arrays, objects, functions...)
     function objectEquals(v1, v2) {
-        var result = false, key, type_a = typeof(v1), type_b = typeof(v2);
-        
-        // stupid jslint wont allow typof comparisons so we do it this way
-        if (type_a !== type_b) {
+        var key, result = false;
+        if (typeof(v1) !== typeof(v2)) {
             result = false;
-        }
-
-        if (typeof(v1) === "function") {
-            result = (v1.toString() === v2.toString());
-        }
-
-        if (v1 instanceof Object && v2 instanceof Object) {
+        } else if (typeof(v1) === "function") {
+            result = (v1.toString() === v2.toString()) ? true : false;
+        } else if (v1 instanceof Object && v2 instanceof Object) {
+            result = true;
             if (objSize(v1) !== objSize(v2)) {
                 result = false;
-            }
-            var r = true;
-            for (key in v1) {
-                if (v1.hasOwnProperty(key)) {
-                    r = objectEquals(v1[key], v2[key]);
-                    if (!r) {
-                        result = false;
+            } else {
+                var r = true;
+                for (key in v1) {
+                    if (v1.hasOwnProperty(key)) {
+                        r = objectEquals(v1[key], v2[key]);
+                        if (!r) {
+                            result = false;
+                        }
                     }
                 }
             }
-            result = true;
         } else {
-            result = (v1 === v2);
+            result = (v1 === v2) ? true : false;
         }
         return result;
     }
@@ -91,16 +85,16 @@
 
     // custom sortby method that uses our object layour and sortby value
     function sortyBySorter(property) {
-        var sortOrder = 1, result_function = false;
+        var sortOrder = 1;
 
         if ((property || property===0) && property[0] === "-") {
             sortOrder = -1;
             property = property.substr(1);
         }
-        result_function = function(a, b) {
+        return function(a, b) {
             var result = 0;
-            if (property || property === 0) {
-                if (!a.hasOwnProperty('static_row') || (a.hasOwnProperty('static_row')&& !a.static_row)) { // if row is not static
+            if ((property || property===0)) {
+                if (!a.hasOwnProperty('static_row') || (a.hasOwnProperty('static_row')&& !a.static_row)) { // if row is not static_row
                     if (a.children[property] && a.children[property].hasOwnProperty('sortby_value')) {
                         result = (a.children[property].sortby_value < b.children[property].sortby_value) ? -1 : (a.children[property].sortby_value > b.children[property].sortby_value) ? 1 : 0;
                     }
@@ -111,13 +105,11 @@
             }
             return result * sortOrder;
         };
-        return result_function;
     }
 
     // generic dynamic (can specifify object names or array index) multisorter (can specify an array of object names or array indexes)
     function dynamicSortMultiple(sort_columns) {
-        var return_function = false;
-        return_function = function(obj1, obj2) {
+        return function(obj1, obj2) {
             var i = 0, result = 0, numberOfProperties = sort_columns.length;
             while (result === 0 && i < numberOfProperties) {
                 result = sortyBySorter(sort_columns[i])(obj1, obj2);
@@ -125,7 +117,6 @@
             }
             return result;
         };
-        return return_function;
     }
 
     // spinner will create an html element with a spinner class that can be styled in any way
@@ -255,10 +246,20 @@
             }
         }
         else if (cell_obj.dataObjId) {
-            sortby_value = row_data[cell_obj.dataObjId] || (cell_obj.hasOwnProperty('sortby')) ? cell_obj.sortby : '';
+            if (row_data[cell_obj.dataObjId]) {
+                sortby_value = row_data[cell_obj.dataObjId];
+            }
+            else {
+                sortby_value = (cell_obj.hasOwnProperty('sortby')) ? cell_obj.sortby : '';
+            }
         }
         else if (cell_obj.storeID) {
-            sortby_value = row_data[cell_obj.storeID] || (cell_obj.hasOwnProperty('sortby')) ? cell_obj.sortby : '';
+            if (row_data[cell_obj.storeID]) {
+                sortby_value = row_data[cell_obj.storeID];
+            }
+            else {
+                sortby_value = (cell_obj.hasOwnProperty('sortby')) ? cell_obj.sortby : '';
+            }
         }
         else if (cell_obj.hasOwnProperty('innerHTML') && cell_obj.innerHTML) {
             sortby_value = cell_obj.innerHTML;
@@ -342,7 +343,12 @@
             }
         }
         else if (cell_obj.dataObjId) {
-            exportby_value = row_data[cell_obj.dataObjId] || (cell_obj.hasOwnProperty('exportby')) ? cell_obj.exportby : '';
+            if (row_data[cell_obj.dataObjId]) {
+                exportby_value = row_data[cell_obj.dataObjId];
+            }
+            else {
+                exportby_value = (cell_obj.hasOwnProperty('exportby')) ? cell_obj.exportby : '';
+            }
             if (cell_obj.hasOwnProperty('format') && cell_obj.format && (cell_obj.hasOwnProperty('dataObjId') && cell_obj.dataObjId && (row_data[cell_obj.dataObjId] || row_data[cell_obj.dataObjId] === 0))) { // if we wanted to format the data-object lets handle it here
                 cell_obj.innerHTML = row_data[cell_obj.dataObjId];
                 // we wanted to format the data-object so lets handle it here
@@ -351,7 +357,12 @@
             }
         }
         else if (cell_obj.storeID) {
-            exportby_value = row_data[cell_obj.storeID] || (cell_obj.hasOwnProperty('exportby')) ? cell_obj.exportby : '';
+            if (row_data[cell_obj.storeID]) {
+                exportby_value = row_data[cell_obj.storeID];
+            }
+            else {
+                exportby_value = (cell_obj.hasOwnProperty('exportby')) ? cell_obj.exportby : '';
+            }
         }
         else if (cell_obj.hasOwnProperty('innerHTML') && cell_obj.innerHTML) {
             exportby_value = cell_obj.innerHTML;
@@ -599,7 +610,7 @@
         };
         
         // we need to create a seperate data set for mapping the unmapped data
-        if (smartTableObject.displayNonMapData && data) {
+        if (smartTableObject.displayNonMapData) {
             for (key in data) {
                 if (data.hasOwnProperty(key)) {
                     unmapped_data[key] = data[key];
@@ -1027,7 +1038,7 @@
     };
     
     SmartTable.drawSelector = function(smartTableObject) {
-        var elements = {}, pointers = {}, function_onclick;
+        var elements = {}, pointers = {}, my_funcs = false;
         
         // remove any existing selector element
         if (smartTableObject.hasOwnProperty('selector') && smartTableObject.selector) {
@@ -1080,7 +1091,7 @@
 
         // for each desired selector option the user has passed if any
         if (smartTableObject.builder_obj.table.attributes.selection.hasOwnProperty('options') && smartTableObject.builder_obj.table.attributes.selection.options) {
-            function_onclick = function(e) {
+            my_funcs = function(e){
                 var rows = [], data = {};
                 data[e.target.dataObjId] = e.target.dataObjValue;
                 rows = SmartTable.getBodyRowsByData(smartTableObject, data);
@@ -1095,7 +1106,7 @@
                 elements.select_option.innerHTML = smartTableObject.builder_obj.table.attributes.selection.options[pointers.options_i].label;
                 elements.select_option.dataObjId = smartTableObject.builder_obj.table.attributes.selection.options[pointers.options_i].dataObjId;
                 elements.select_option.dataObjValue = smartTableObject.builder_obj.table.attributes.selection.options[pointers.options_i].value;
-                elements.select_option.onclick = function_onclick;
+                elements.select_option.onclick = my_funcs;
                 elements.li.appendChild(elements.select_option);
                 elements.ul_list.appendChild(elements.li);
             }
@@ -1290,8 +1301,8 @@
             pointers = {},
             key,
             values = {},
-            header_cell_tag,
-            function_sortclick = false;
+            my_funcs = false,
+            header_cell_tag;
             
         smartTableObject.sortable_header = []; // object to hold all clickable header cells
         
@@ -1317,7 +1328,7 @@
         elements.header = (smartTableObject.hasOwnProperty('header') && smartTableObject.header && smartTableObject.header.hasOwnProperty('tag') && smartTableObject.header.tag) ? document.createElement(smartTableObject.header.tag) : document.createElement("thead");
         // loop through the header children (rows) and draw each row and column cell
         if (smartTableObject.hasOwnProperty('header') && smartTableObject.header && smartTableObject.header.hasOwnProperty('children') && smartTableObject.header.children) {
-            function_sortclick = function(e){
+            my_funcs = function(e) {
                 if (values.old) {
                     values.old.onclick(e);
                 }
@@ -1367,10 +1378,10 @@
                     // now if tag is th and if attribute sortable is set to true then we can make this header cell clickable
                     if (header_cell_tag === "th" && (smartTableObject.header.children[pointers.row_i].children[pointers.cell_i].hasOwnProperty('sortable') && smartTableObject.header.children[pointers.row_i].children[pointers.cell_i].sortable)) {
                         if (elements.tmpcell.onclick) {
-                            pointers.onclick_func = 'onclick';
-                            values.old = {onclick: elements.tmpcell[pointers.onclick_func]};
+                            pointers.onclick = 'onclick';
+                            values.old = {onclick: elements.tmpcell[pointers.onclick]};
                         }
-                        elements.tmpcell.onclick = function_sortclick;
+                        elements.tmpcell.onclick = my_funcs;
                         /*
                         // collapsable button
                         elements.colapsable_button = document.createElement('text');
@@ -1384,9 +1395,6 @@
                         // create object map of all header cells so we can switch classing on them for sorting
                         smartTableObject.sortable_header[elements.tmpcell.body_column] = elements.tmpcell;
                     }
-                    
-                    
-                    
                     // put cell in row
                     elements.tmprow.appendChild(elements.tmpcell);
                 }
@@ -1403,7 +1411,7 @@
     };
     
     SmartTable.setupCell = function(smartTableObject, cell_index, cell_obj, row_element, cell_element){
-        var elements = {}, key,
+        var elements = {}, key, 
             cell_callback_result = false,
             cell_callback = (cell_obj.hasOwnProperty('renderCallback') && cell_obj.renderCallback) ? cell_obj.renderCallback : false;
     
