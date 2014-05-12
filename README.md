@@ -7,4 +7,7 @@ The current release is fully functional but I am adding some additional features
 
 A later release will convert this to more object oriented and extensible. 
 
+Tips:
+/dist/js and dist/css folders contains everything you need to use the library immediately 
+
 More detals to follow.
