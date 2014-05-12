@@ -1,3 +1,10 @@
+/*
+
+    SmartTable version 2.2a
+    Build Date: Mon, 12 May 2014 15:47:54 -0700
+
+*/
+
 /*!
  * Smart Table Builder, Version 2
  *

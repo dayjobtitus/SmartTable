@@ -1,7 +1,7 @@
 /*
 
-    SmartTable version 2.2
-    Build Date: Tue, 15 Apr 2014 21:51:14 -0700
+    SmartTable version 2.2a
+    Build Date: Mon, 12 May 2014 15:01:07 -0700
 
 */
 
@@ -833,12 +833,12 @@
 
         elements.div = document.createElement("div");
 
-        elements.div.setAttribute("class", "filter");
+        elements.div.setAttribute("class", "stfilter");
         elements.span = document.createElement("span");
         elements.span.innerHTML = "Filter";
         elements.div.appendChild(elements.span);
         elements.input = document.createElement("input");
-        elements.input.setAttribute("class", "filter");
+        elements.input.setAttribute("class", "stfilter");
         elements.input.setAttribute("type", "text");
         elements.input.setAttribute("maxlength", "200");
         elements.input.onchange = function(e) {

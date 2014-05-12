@@ -12,16 +12,16 @@
         <!--Source CSS dir-->
         <property name="src.css.dir" value="${basedir}/src/css"/>
         <!--YUI Compressor location-->
-        <property name="yui.dir" value="${build.dir}/lib/yuicompressor-2.4.7.jar"/>
+        <property name="yui.dir" value="lib/yuicompressor-2.4.7.jar"/>
         <!--Source Lint/Hint dir-->
-        <property name="jslint.js" value="${build.dir}/lib/jslint.js"/>
+        <property name="jslint.js" value="lib/jslint.js"/>
         <!--jslint4java-->
-        <taskdef name="jslint" classname="com.googlecode.jslint4java.ant.JSLintTask" classpath="${build.dir}/lib/jslint4java-2.0.2.jar" />
+        <taskdef name="jslint" classname="com.googlecode.jslint4java.ant.JSLintTask" classpath="lib/jslint4java-2.0.2.jar" />
         <!--Output dir-->
         <property name="dist.dir" value="dist"/>
         <!--Build version information -->
         <property name="build.major" value="2"/>
-        <property name="build.minor" value="2"/>
+        <property name="build.minor" value="2a"/>
         <tstamp>
             <format property="build.timestamp" pattern="yyyyMMddHHmm" />
             <format property="TODAY" pattern="EEE, d MMM yyyy HH:mm:ss Z"/>
@@ -34,8 +34,8 @@
         
         <!--Empty build dicectories-->
         <delete>
-            <fileset dir="${dist.dir}/js"/>
-            <fileset dir="${dist.dir}/css"/>
+            <fileset dir="${build.dir}/js"/>
+            <fileset dir="${build.dir}/css"/>
         </delete>
         
     </target>
@@ -55,11 +55,11 @@
     <!--Concatenate JS files-->
     <target name="-js.concatenate" depends="" description="Concatenates specified JavaScript files">
         <echo>Concatenating JavaScript files</echo>
-        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js">/*${line.separator}${line.separator}</echo>
-        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
-        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
-        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js" append="true">*/${line.separator}${line.separator}</echo>
-        <concat destfile="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.src.js" append="true">
+        <echo file="${build.dir}/js/SmartTable-${build.major}.${build.minor}.dev.js">/*${line.separator}${line.separator}</echo>
+        <echo file="${build.dir}/js/SmartTable-${build.major}.${build.minor}.dev.js" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
+        <echo file="${build.dir}/js/SmartTable-${build.major}.${build.minor}.dev.js" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
+        <echo file="${build.dir}/js/SmartTable-${build.major}.${build.minor}.dev.js" append="true">*/${line.separator}${line.separator}</echo>
+        <concat destfile="${build.dir}/js/SmartTable-${build.major}.${build.minor}.dev.js" append="true">
             <fileset 
                 dir="${src.js.dir}"
                 includes="*.js"/>
@@ -70,11 +70,11 @@
     <!--Concatenate CSS files-->
     <target name="-css.concatenate" depends="" description="Concatenates specified CSS files">
         <echo>Concatenating CSS files</echo>
-        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css">/*${line.separator}${line.separator}</echo>
-        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
-        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
-        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css" append="true">*/${line.separator}${line.separator}</echo>
-        <concat destfile="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.css" append="true">
+        <echo file="${build.dir}/css/SmartTable-${build.major}.${build.minor}.dev.css">/*${line.separator}${line.separator}</echo>
+        <echo file="${build.dir}/css/SmartTable-${build.major}.${build.minor}.dev.css" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
+        <echo file="${build.dir}/css/SmartTable-${build.major}.${build.minor}.dev.css" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
+        <echo file="${build.dir}/css/SmartTable-${build.major}.${build.minor}.dev.css" append="true">*/${line.separator}${line.separator}</echo>
+        <concat destfile="${build.dir}/css/SmartTable-${build.major}.${build.minor}.dev.css" append="true">
             <fileset 
                 dir="${src.css.dir}"
                 includes="*.css"/>
@@ -85,37 +85,37 @@
 
     <!--Minify JS files-->
     <target name="-js.minify" depends="-js.concatenate" description="Minifies JavaScript files">
-        <echo>Running YUI Compressor on .src.js files</echo>
-        <apply executable="java" parallel="false" dest="${dist.dir}/js" append="true">
-            <fileset dir="${dist.dir}/js" includes="*.src.js"/>
+        <echo>Running YUI Compressor on .dev.js files</echo>
+        <apply executable="java" parallel="false" dest="${build.dir}/js" append="true">
+            <fileset dir="${build.dir}/js" includes="*.dev.js"/>
             <arg line="-jar"/>
             <arg path="${yui.dir}"/>
             <srcfile/>
             <arg line="-o"/>
-            <mapper type="regexp" from="^(.*)\.src\.js$" to="\1.min.js" />
+            <mapper type="regexp" from="^(.*)\.dev\.js$" to="\1.min.js" />
             <targetfile/>
         </apply>
-        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js">/*${line.separator}${line.separator}</echo>
-        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
-        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
-        <echo file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">*/${line.separator}${line.separator}</echo>
-        <concat destfile="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">
+        <echo file="${build.dir}/js/SmartTable-${build.major}.${build.minor}.js">/*${line.separator}${line.separator}</echo>
+        <echo file="${build.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
+        <echo file="${build.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
+        <echo file="${build.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">*/${line.separator}${line.separator}</echo>
+        <concat destfile="${build.dir}/js/SmartTable-${build.major}.${build.minor}.js" append="true">
             <fileset
-                dir="${dist.dir}/js"
+                dir="${build.dir}/js"
                 includes="SmartTable-${build.major}.${build.minor}.min.js"/>
         </concat>
         <delete
-            file="${dist.dir}/js/SmartTable-${build.major}.${build.minor}.min.js"/>
+            file="${build.dir}/js/SmartTable-${build.major}.${build.minor}.min.js"/>
         <echo>Finished</echo>
     </target>
 
     <!--Minify CSS files-->
     <target name="-css.minify" depends="-css.concatenate" description="Minifies CSS files">
-        <echo>Running YUI Compressor on .src.css files</echo>
-        <apply executable="java" parallel="false"  dest="${dist.dir}/css">
+        <echo>Running YUI Compressor on .dev.css files</echo>
+        <apply executable="java" parallel="false"  dest="${build.dir}/css">
             <fileset 
-                dir="${dist.dir}/css" 
-                includes="*.src.css"/>
+                dir="${build.dir}/css" 
+                includes="*.dev.css"/>
             <arg line="-jar"/>
             <arg path="${yui.dir}"/>
             <arg line="--line-break 0"/>
@@ -124,17 +124,17 @@
             <mapper type="glob" from="*.css" to="*.min.css"/>
             <targetfile/>
         </apply>
-        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css">/*${line.separator}${line.separator}</echo>
-        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
-        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
-        <echo file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">*/${line.separator}${line.separator}</echo>
-        <concat destfile="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">
+        <echo file="${build.dir}/css/SmartTable-${build.major}.${build.minor}.css">/*${line.separator}${line.separator}</echo>
+        <echo file="${build.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">    SmartTable version ${build.major}.${build.minor}${line.separator}</echo>
+        <echo file="${build.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">    Build Date: ${TODAY}${line.separator}${line.separator}</echo>
+        <echo file="${build.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">*/${line.separator}${line.separator}</echo>
+        <concat destfile="${build.dir}/css/SmartTable-${build.major}.${build.minor}.css" append="true">
             <fileset
-                dir="${dist.dir}/css"
-                includes="SmartTable-${build.major}.${build.minor}.src.min.css"/>
+                dir="${build.dir}/css"
+                includes="SmartTable-${build.major}.${build.minor}.dev.min.css"/>
         </concat>
         <delete
-            file="${dist.dir}/css/SmartTable-${build.major}.${build.minor}.src.min.css"/>
+            file="${build.dir}/css/SmartTable-${build.major}.${build.minor}.dev.min.css"/>
         <echo>Finished</echo>
     </target>
 
