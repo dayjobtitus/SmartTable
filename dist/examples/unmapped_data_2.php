@@ -17,19 +17,8 @@
                     builder_obj = {
                         target: target,
                         data: data,
-                        displayNonMapData: true,
-                        table: {
-                            attributes: {
-                                cellSpacing: '0',
-                                cellPadding: '2',
-                                className: 'tablesorter',
-                                id: 'sampleSt'
-                            }
-                        }
+                        displayNonMapData: true
                     };
-            
-                target.innerHTML = "";
-
                 smarttableobject = SmartTable.buildSmartTable(builder_obj);
             }());
         </script>
