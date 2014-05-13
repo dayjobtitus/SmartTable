@@ -11,7 +11,7 @@
         <div id="tablediv"></div>
         <script type="text/javascript">
             (function() {
-                var data = [{id: 'test row A', aaa: '40', bbb: 12.345, ccc: 'Ut placerat mi id justo.'},{id: 'test row B', aaa: '123452', bbb: 4.5, ccc: 'Aliquam non iaculis metus, eu convallis mauris.'},{id: 'test row C', aaa: '0', bbb: 324, ccc: 'Phasellus massa magna.'}],
+                var data = [{id: 454845, aaa: '40', bbb: 12.345, ccc: 45.25, ddd: 45.25, eee: false},{id: 434556, aaa: '123452', bbb: 4.5, ccc: 8526.1, ddd: 8526.1, eee: true},{id: 1123441, aaa: '0', bbb: 324, ccc: 741, ddd: 741, eee: true},{id: 10, aaa: '0', bbb: 324, ccc: 0.32, ddd: 0.32, eee: false}],
                     smarttableobject = {},
                     target = document.getElementById('tablediv'),
                     builder_obj = {
@@ -27,15 +27,18 @@
                                 sortable: true
                             },
                             headerMap: [
-                                {col: 0, row: 0, innerHTML: '', sortable: true, width: '150'},
-                                {col: 1, row: 0, innerHTML: 'ints', sortable: true, className: 'number'},
-                                {col: 2, row: 0, innerHTML: 'decs', sortable: true, className: 'number'},
-                                {col: 3, row: 0, innerHTML: 'memo'}
+                                {col: 0, row: 0, innerHTML: 'integer', sortable: true, className: 'number'},
+                                {col: 1, row: 0, innerHTML: 'number', sortable: true, className: 'number'},
+                                {col: 2, row: 0, innerHTML: 'decimal', sortable: true, className: 'number'},
+                                {col: 3, row: 0, innerHTML: 'currency', sortable: true, className: 'number'},
+                                {col: 4, row: 0, innerHTML: 'percentage', sortable: true, className: 'number'},
+                                {col: 5, row: 0, innerHTML: 'boolean', sortable: true}
                             ],
                             bodyMap: [
                                 {
                                     col: 0,
-                                    dataObjId: 'id'
+                                    dataObjId: 'id',
+                                    className: 'number'
                                 },
                                 {
                                     col: 1,
@@ -49,7 +52,18 @@
                                 },
                                 {
                                     col: 3, 
-                                    dataObjId: 'ccc'
+                                    dataObjId: 'ccc',
+                                    format: 'currency'
+                                },
+                                {
+                                    col: 4, 
+                                    dataObjId: 'ddd',
+                                    format: 'percentage'
+                                },
+                                {
+                                    col: 5, 
+                                    dataObjId: 'eee',
+                                    format: 'boolean'
                                 }
                             ]
                         }

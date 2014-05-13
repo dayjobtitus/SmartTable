@@ -6,13 +6,17 @@
         <link href="a.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <?php
+        <ul>
+            <?php
             $examples = scandir("./examples");
             foreach($examples as $link){ 
                 if ($link != "." && $link != "..") {?>
-                <a href='./examples/<?=$link?>'><?=$link?></a>
+                <li>
+                    <a href='./examples/<?=$link?>'><?=$link?></a>
+                </li>
             <?php 
                 }
             } ?>
+        </ul>
     </body>
 </html>
