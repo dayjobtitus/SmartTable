@@ -23,47 +23,49 @@
                                 cellSpacing: '0',
                                 cellPadding: '2',
                                 className: 'tablesorter',
-                                id: 'sampleSt',
-                                sortable: true
+                                id: 'sampleSt'
                             },
                             headerMap: [
                                 {col: 0, row: 0, innerHTML: 'integer', sortable: true, className: 'number'},
                                 {col: 1, row: 0, innerHTML: 'number', sortable: true, className: 'number'},
-                                {col: 2, row: 0, innerHTML: 'decimal', sortable: true, className: 'number'},
-                                {col: 3, row: 0, innerHTML: 'currency', sortable: true, className: 'number'},
-                                {col: 4, row: 0, innerHTML: 'percentage', sortable: true, className: 'number'},
-                                {col: 5, row: 0, innerHTML: 'boolean', sortable: true}
+                                {col: 2, row: 0, innerHTML: 'math', sortable: true},
+                                {col: 3, row: 0, innerHTML: 'boolean', sortable: true}
                             ],
                             bodyMap: [
                                 {
                                     col: 0,
                                     dataObjId: 'id',
-                                    className: 'number'
+                                    className: 'number',
+                                    callback: function(data, cell_obj, row_obj){
+                                        data.newitem = data.id * 2;
+                                    },
                                 },
                                 {
-                                    col: 1,
-                                    dataObjId: 'aaa',
+                                    col: 1, 
+                                    dataObjId: 'newitem',
                                     format: 'number'
                                 },
                                 {
-                                    col: 2,
-                                    dataObjId: 'bbb',
-                                    format: 'decimal'
+                                    col: 2, 
+                                    exportby: function(data, value) {
+                                        return data.bbb + " + " + data.ccc + " = " + (data.bbb + data.ccc);
+                                    },
+                                    sortby: function(data, value) {
+                                        return data.bbb + " + " + data.ccc + " = " + (data.bbb + data.ccc);
+                                    },
+                                    renderCallback: function(obj, data, col, row){
+                                        obj.innerHTML = data.bbb + " + " + data.ccc + " = " + (data.bbb + data.ccc);
+                                    }
                                 },
                                 {
                                     col: 3, 
-                                    dataObjId: 'ccc',
-                                    format: 'currency'
-                                },
-                                {
-                                    col: 4, 
-                                    dataObjId: 'ddd',
-                                    format: 'percentage'
-                                },
-                                {
-                                    col: 5, 
-                                    dataObjId: 'eee',
-                                    format: 'boolean'
+                                    renderCallback: function(obj, data, col, row){
+                                        // here we didnt assign any object so we just want to create something all our own
+                                        obj.innerHTML = 'False';
+                                        if (data.eee) {
+                                            obj.innerHTML = 'True';
+                                        }
+                                    }
                                 }
                             ]
                         }

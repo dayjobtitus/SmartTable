@@ -23,8 +23,7 @@
                                 cellSpacing: '0',
                                 cellPadding: '2',
                                 className: 'tablesorter',
-                                id: 'sampleSt',
-                                sortable: true
+                                id: 'sampleSt'
                             },
                             headerMap: [
                                 {col: 0, row: 0, innerHTML: 'integer', sortable: true, className: 'number'},

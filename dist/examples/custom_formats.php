@@ -23,8 +23,7 @@
                                 cellSpacing: '0',
                                 cellPadding: '2',
                                 className: 'tablesorter',
-                                id: 'sampleSt',
-                                sortable: true
+                                id: 'sampleSt'
                             },
                             headerMap: [
                                 {col: 0, row: 0, innerHTML: 'integer', sortable: true, className: 'number'},
@@ -41,7 +40,10 @@
                                 {
                                     col: 1, 
                                     dataObjId: 'ccc',
-                                    format: 'currency'
+                                    format: 'currency',
+                                    renderCallback: function(obj, data, col, row){
+                                        row.onclick = function(e){console.log('row ' + (row.bodyRow + 1) + ' in cell ' + (e.target.cellIndex + 1) + ' clicked');};
+                                    }
                                 },
                                 {
                                     col: 2, 

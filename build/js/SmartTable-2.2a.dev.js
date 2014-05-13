@@ -1,7 +1,7 @@
 /*
 
     SmartTable version 2.2a
-    Build Date: Mon, 12 May 2014 15:47:54 -0700
+    Build Date: Tue, 13 May 2014 14:32:10 -0700
 
 */
 
@@ -402,7 +402,9 @@
         cell_object.innerHTML = string;
         cell_object.sortable = true;
         
-        cell_object.col = smartTableObject.header.children[0].children.length + 1;
+        cell_object.col = smartTableObject.header.children[0].children.length;
+        
+        cell_object.body_column = (smartTableObject.header.children[0].children[smartTableObject.header.children[0].children.length - 1]) ? smartTableObject.header.children[0].children[smartTableObject.header.children[0].children.length - 1].body_column + 1 : 0;
         
         // now place inside the curren row (TR)
         smartTableObject.header.children[0].children.push(cell_object);
@@ -465,16 +467,16 @@
                     for (pointers.cell_i = 0; pointers.cell_i < sorted_header_array[pointers.row_i].length; pointers.cell_i += 1) { // columns
                         if (sorted_header_array[pointers.row_i][pointers.cell_i]) { // make sure we have some values at this column
                             elements.header_row_cell = {};
-                            elements.header_row_cell.tag = (sorted_header_array[pointers.row_i][pointers.cell_i].hasOwnProperty('sortable') && sorted_header_array[pointers.row_i][pointers.cell_i].sortable) ? 'th' : 'td';
+                            elements.header_row_cell.tag = (!sorted_header_array[pointers.row_i][pointers.cell_i].hasOwnProperty('sortable') || (sorted_header_array[pointers.row_i][pointers.cell_i].hasOwnProperty('sortable') && sorted_header_array[pointers.row_i][pointers.cell_i].sortable)) ? 'th' : 'td';
                             elements.header_row_cell.colSpan = (sorted_header_array[pointers.row_i][pointers.cell_i].hasOwnProperty('colSpan')) ? sorted_header_array[pointers.row_i][pointers.cell_i].colSpan : 1;
-                            
+
                             // identify header official column locations relative to what the body will have (the DOM is dumb this way)
                             if (pointers.row_i === 0) {
                                 counters.body_columns += 1;
                                 elements.header_row_cell.body_column = counters.body_columns;
                                 if (elements.header_row_cell.colSpan > 1) {counters.body_columns += (elements.header_row_cell.colSpan - 1);}
                             }
-                            
+
                             // rowSpan logic
                             elements.header_row_cell.rowSpan = (elements.header_row_cell.colSpan === 1) ? (sorted_header_array[pointers.row_i][pointers.cell_i].hasOwnProperty('rowSpan')) ? sorted_header_array[pointers.row_i][pointers.cell_i].rowSpan : (counters.valid_rows - counters.current_rows) : (sorted_header_array[pointers.row_i][pointers.cell_i].hasOwnProperty('rowSpan')) ? sorted_header_array[pointers.row_i][pointers.cell_i].rowSpan : 1;
                             elements.header_row_cell.innerHTML = sorted_header_array[pointers.row_i][pointers.cell_i].hasOwnProperty('innerHTML') ? sorted_header_array[pointers.row_i][pointers.cell_i].innerHTML : '';
@@ -491,12 +493,12 @@
                             elements.header_row.children.push(elements.header_row_cell);
                         }
                     }
-                    
+
                     // add current row to the header now
                     smartTableObject.header.children.push(elements.header_row);
                     counters.current_rows += 1;
                 }
-            }
+            }            
             
             // because the DOM is stupid and does not create relationships with headers and the body columns NOR even between the different rows in the header itself, we have to do all the work
             for (pointers.row_i = 1; pointers.row_i < smartTableObject.header.children.length; pointers.row_i += 1) { // go through the rest of the rows now
@@ -522,6 +524,15 @@
                     counters.col_span -= 1;
                 }
             }
+        }
+        else {
+            elements.header_row = {};
+            elements.header_row.children = [];
+            elements.header_row.tag = "tr";
+
+            // add current row to the header now
+            smartTableObject.header.children.push(elements.header_row);
+            counters.current_rows += 1;
         }
 
         // return our new built header element
@@ -648,10 +659,9 @@
         if (smartTableObject.displayNonMapData) {
             for (key in unmapped_data) {
                 if (unmapped_data.hasOwnProperty(key)) {
-                    draw_new_header = false;
+                    draw_new_header = true;
                     // find the header for this cell to place it under
                     for (pointers.header_i = 0; pointers.header_i < smartTableObject.header.children[0].children.length; pointers.header_i += 1) {
-                        draw_new_header = true;
                         if (smartTableObject.header.children[0].children[pointers.header_i].dataObjId === key) {
                             // add a new cell now
                             elements.cell = SmartTable.createTDs({
@@ -1376,7 +1386,7 @@
                     }
                     
                     // now if tag is th and if attribute sortable is set to true then we can make this header cell clickable
-                    if (header_cell_tag === "th" && (smartTableObject.header.children[pointers.row_i].children[pointers.cell_i].hasOwnProperty('sortable') && smartTableObject.header.children[pointers.row_i].children[pointers.cell_i].sortable)) {
+                    if (header_cell_tag === "th" && (!smartTableObject.header.children[pointers.row_i].children[pointers.cell_i].hasOwnProperty('sortable') || (smartTableObject.header.children[pointers.row_i].children[pointers.cell_i].hasOwnProperty('sortable') && smartTableObject.header.children[pointers.row_i].children[pointers.cell_i].sortable))) {
                         if (elements.tmpcell.onclick) {
                             pointers.onclick = 'onclick';
                             values.old = {onclick: elements.tmpcell[pointers.onclick]};

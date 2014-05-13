@@ -17,40 +17,14 @@
                     builder_obj = {
                         target: target,
                         data: data,
-                        displayNonMapData: false,
+                        displayNonMapData: true,
                         table: {
                             attributes: {
                                 cellSpacing: '0',
                                 cellPadding: '2',
                                 className: 'tablesorter',
                                 id: 'sampleSt'
-                            },
-                            headerMap: [
-                                {col: 0, row: 0, innerHTML: '', sortable: true, width: '150'},
-                                {col: 1, row: 0, innerHTML: 'ints', sortable: true, className: 'number'},
-                                {col: 2, row: 0, innerHTML: 'decs', sortable: true, className: 'number'},
-                                {col: 3, row: 0, innerHTML: 'memo'}
-                            ],
-                            bodyMap: [
-                                {
-                                    col: 0,
-                                    dataObjId: 'id'
-                                },
-                                {
-                                    col: 1,
-                                    dataObjId: 'aaa',
-                                    format: 'number'
-                                },
-                                {
-                                    col: 2,
-                                    dataObjId: 'bbb',
-                                    format: 'decimal'
-                                },
-                                {
-                                    col: 3, 
-                                    dataObjId: 'ccc'
-                                }
-                            ]
+                            }
                         }
                     };
             
