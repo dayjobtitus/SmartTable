@@ -10,6 +10,11 @@
     <body>
         <div id="tablediv"></div>
         <script type="text/javascript">
+            /*
+             *  This example is similar to simple_data example but with some prebuilt format attributes to control the look and control of the data for those columns
+             *  - A simple array of objects that have fields with data that we want to display in table form
+             *  - A simple build object with some standard attributes and a header and body map with prebuilt formats controlling the display of data
+             */
             (function() {
                 var data = [{id: 454845, aaa: '40', bbb: 12.345, ccc: 45.25, ddd: 45.25, eee: false},{id: 434556, aaa: '123452', bbb: 4.5, ccc: 8526.1, ddd: 8526.1, eee: true},{id: 1123441, aaa: '0', bbb: 324, ccc: 741, ddd: 741, eee: false},{id: 10, aaa: '0', bbb: 324, ccc: 0.32, ddd: 0.32, eee: false}],
                     smarttableobject = {},

@@ -10,6 +10,14 @@
     <body>
         <div id="tablediv"></div>
         <script type="text/javascript">
+            /*
+            * This example show a more complicated dataset that we want do not intend to mess with previous to passing to the table (or you just want to do this), and so we do some custom rendering on each cell
+            * - You can call to renderCallback(obj, data, col, row) and can override/take-control over any of the 4 items
+            * - obj = pre-render object
+            * - data = object data provided to this row (not just the cell)
+            * - col/cell = the html dom object for the TD (best used to apply eventhandlers or draw custom html elements and such)
+            * - row = the html dom object for the TR (best used to apply eventhandlers or apply something to the TR tag and access the specific row placement value)
+            */
             (function() {
                 var data = [{id: 454845, aaa: '40', bbb: 12.345, ccc: 45.25, ddd: 45.25, eee: false},{id: 434556, aaa: '123452', bbb: 4.5, ccc: 8526.1, ddd: 8526.1, eee: true},{id: 1123441, aaa: '0', bbb: 324, ccc: 741, ddd: 741, eee: true},{id: 10, aaa: '0', bbb: 324, ccc: 0.32, ddd: 0.32, eee: false}],
                     smarttableobject = {},

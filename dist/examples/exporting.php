@@ -10,9 +10,14 @@
     <body>
         <div id="tablediv"></div>
         <script type="text/javascript">
+            /*
+             *  This example shows a complicated bodymap to format data and control how it may export and sort and then within a callback it console logs the formatted export array
+             *  - Its intended that you would take this array and use some system to turn it into a CSV, text or some other document 
+             *  - Export data also always contains the filtered and sorted outcome based on what you see in the UI
+             *  - Export data may not represent UI display of the same data depending on how you format the body object
+             */
             (function() {
                 var data = [{id: 454845, aaa: '40', bbb: 12.345, ccc: 45.25, ddd: 45.25, eee: false, fff: 'Thoksadfg jhagvsdh '},{id: 434556, aaa: '123452', bbb: 4.5, ccc: 8526.1, ddd: 8526.1, eee: true},{id: 1123441, aaa: '0', bbb: 324, ccc: 741, ddd: 741, eee: true, fff: 'sakjt3yhfgsdjj'},{id: 10, aaa: '0', bbb: 324, ccc: 0.32, ddd: 0.32, eee: false, fff: "ffsl'kgh.asd fg, safug"}],
-                    smarttableobject = {},
                     target = document.getElementById('tablediv'),
                     builder_obj = {
                         target: target,

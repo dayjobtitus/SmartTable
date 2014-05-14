@@ -10,6 +10,10 @@
     <body>
         <div id="tablediv"></div>
         <script type="text/javascript">
+            /*
+            * This example is similar to custom formats example but additionally we access the pre-handling callback to create a new data object item based on some row specific logic, for which is then accessable as if it existed previous
+            * - You can use this type of workflow to access the row to maybe apply some css tag pre-render or pretty much anything can be done here
+            */
             (function() {
                 var data = [{id: 454845, aaa: '40', bbb: 12.345, ccc: 45.25, ddd: 45.25, eee: false},{id: 434556, aaa: '123452', bbb: 4.5, ccc: 8526.1, ddd: 8526.1, eee: true},{id: 1123441, aaa: '0', bbb: 324, ccc: 741, ddd: 741, eee: true},{id: 10, aaa: '0', bbb: 324, ccc: 0.32, ddd: 0.32, eee: false}],
                     smarttableobject = {},
