@@ -22,12 +22,16 @@
                         target: target,
                         data: data,
                         displayNonMapData: false,
+                        
                         table: {
                             attributes: {
                                 cellSpacing: '0',
                                 cellPadding: '2',
                                 className: 'tablesorter',
-                                id: 'sampleSt'
+                                id: 'sampleSt',
+                                filter: true,
+                                sort_columns: [1],
+                                pagination: {size: 2},
                             },
                             headerMap: [
                                 {col: 0, row: 0, innerHTML: 'integer', sortable: true, className: 'number'},
