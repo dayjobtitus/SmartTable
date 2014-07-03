@@ -1298,6 +1298,62 @@
         }
         return smartTableObject;
     };
+    
+    function getAbsolutePosition(obj){
+        var lft = 0, tp = 0, target = obj;
+        if (obj && obj.hasOwnProperty('offsetLeft') && obj.hasOwnProperty('offsetTop')) {
+            lft = obj.offsetLeft;
+            tp = obj.offsetTop;
+            while (target.parentNode) {
+                lft += (target.parentNode.hasOwnProperty('offsetLeft')) ? target.parentNode.offsetLeft : 0;
+                tp += (target.parentNode.hasOwnProperty('offsetTop')) ? target.parentNode.offsetTop : 0;
+                target = target.parentNode;
+            }
+        }
+        return {left: lft, top: tp};
+    }
+    
+    SmartTable.drawOptions = function(obj){
+        var container = document.createElement("div"), ul = document.createElement("ul"), li = document.createElement("li"), abs = getAbsolutePosition(obj.cell), i = 0;
+        //div.style.left = abs.left + "px";
+        //div.style.top = abs.top + obj.cell.offsetHeight + "px";
+        //div.style.width = obj.cell.offsetWidth + "px";
+        
+        if (obj.cell.hasOwnProperty('optionsShown') && obj.cell.optionsShown) {
+            obj.cell.optionsNode.parentNode.removeChild(obj.cell.optionsNode);
+            obj.cell.optionsShown = false;
+        }
+        else {
+            li.innerHTML = (obj.cell.collapsed) ? "Expand" : "Collapse";
+            
+            li.onclick = function(e){
+                obj.cell.collapsed = !obj.cell.collapsed;
+                // need to handle putting back classes that user may have originally wanted or removing and adding the collapsed class
+                obj.cell.className = (obj.cell.collapsed) ? "collapsed" : "";
+
+                // for each cell under header we need to set class to disabled
+                //if (obj.cell.collapsed) {
+                    /*
+                    for () {
+
+                    }
+                    */
+                //}
+
+                e.target.innerHTML = (obj.cell.collapsed) ? "Expand" : "Collapse";
+                
+            };
+            ul.appendChild(li);
+
+            // allow user to append other stuff to list of options via a callback or something
+
+            container.appendChild(ul);
+            container.className = "header-options";
+            obj.cell.appendChild(container);
+            obj.cell.optionsShown = true;
+            obj.cell.optionsNode = container;
+        }
+    };
 
     SmartTable.drawHeader = function(smartTableObject) {
         var elements = {},
@@ -1385,16 +1441,17 @@
                             values.old = {onclick: elements.tmpcell[pointers.onclick]};
                         }
                         elements.tmpcell.onclick = my_funcs;
-                        /*
+                        
+                        
                         // collapsable button
-                        elements.colapsable_button = document.createElement('text');
-                        elements.colapsable_button.innerHTML = " X";
+                        elements.colapsable_button = document.createElement('i');
+                        elements.colapsable_button.className = "icon-gear";
+                        elements.tmpcell.collapsed = false;
                         elements.colapsable_button.onclick = function(e){
-                            console.log("hideme");
-                            console.log({cell: elements.tmpcell});
+                            SmartTable.drawOptions({cell: e.target.parentNode, target: e.target});
                         };
                         elements.tmpcell.appendChild(elements.colapsable_button);
-                        */
+                       
                         // create object map of all header cells so we can switch classing on them for sorting
                         smartTableObject.sortable_header[elements.tmpcell.body_column] = elements.tmpcell;
                     }

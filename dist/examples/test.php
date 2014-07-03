@@ -1,11 +1,11 @@
-<?php error_reporting(E_ALL ^ E_NOTICE); ?>
 <!DOCTYPE html><html lang="en">
-    <head>
+<head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>SmartTable - <?=preg_replace('/\.php$/', '', basename(__FILE__));?></title>
-        
+        <title>TEST</title>
+
+        <!--<link href="../css/liverail.min.css" rel="stylesheet" type="text/css"/>-->
         <link href="../css/SmartTable-2.2a.dev.css" rel="stylesheet" type="text/css"/>
-        <script type="text/javascript" src="../js/SmartTable-2.2a.dev.js"></script>
+        <script type="text/javascript" src="../../build/js/SmartTable-2.2a.dev.js"></script>
     </head>
     <body>
         <div id="tablediv"></div>
@@ -85,4 +85,4 @@
             }());
         </script>
     </body>
-</html>
+    </html>
